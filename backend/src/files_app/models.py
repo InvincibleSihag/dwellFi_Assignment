@@ -19,6 +19,4 @@ class FileAnomalies(BaseMixinWithCreatedBy, Base):
     id = Column(Integer, primary_key=True, index=True)
     file_id = Column(Integer, ForeignKey('files.id'))
     data = Column(String)
-    file = relationship("File", back_populates="anomalies")
 
-File.anomalies = relationship("FileAnomalies", order_by=FileAnomalies.id, back_populates="file")
