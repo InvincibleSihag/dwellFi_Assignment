@@ -18,8 +18,6 @@ class File(FileBase):
     updated_at: datetime.datetime
     created_by_id: Optional[str] = None
     updated_by_id: Optional[str] = None
-    class Config:
-        orm_mode = True
 
 class FileAnomaliesBase(BaseModel):
     file_id: int
@@ -30,6 +28,3 @@ class FileAnomaliesCreate(FileAnomaliesBase):
 
 class FileAnomalies(FileAnomaliesBase):
     id: int
-
-    class Config:
-        orm_mode = True

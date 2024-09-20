@@ -1,7 +1,4 @@
 import asyncio
-import traceback
-import aioredis
-import redis
 from starlette.websockets import WebSocket
 
 from .redis_pub_sub_connection import RedisPubSubManager
@@ -42,13 +39,7 @@ class EventSubscription:
                 self.pubsub_client = RedisPubSubManager()
                 await self.pubsub_client.connect()
                 await self.ensure_connection_and_subscribe()
-                # traceback.print_tb(e.__traceback__)
-                # await self.ensure_connection_and_subscribe()
-                # self.listening_task.cancel()
-        # for events in pubsub.listen():
-        #     print(events)
-        #     for socket in self.user_sockets["notify:userid:63408ef00a8d44c7be245653d187bb34"]:
-        #         await socket.send_json(events['data'])
+                
 
     def re_establish_listening(self, r):
         print("Creating new listening task")
