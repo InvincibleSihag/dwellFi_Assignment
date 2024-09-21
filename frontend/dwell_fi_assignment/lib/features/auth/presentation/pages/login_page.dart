@@ -1,26 +1,54 @@
+import 'dart:developer';
+
+import 'package:dwell_fi_assignment/features/auth/domain/entities/user_login.dart';
+import 'package:dwell_fi_assignment/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:dwell_fi_assignment/features/auth/presentation/bloc/auth_event.dart';
+import 'package:dwell_fi_assignment/features/auth/presentation/bloc/auth_state.dart';
+import 'package:dwell_fi_assignment/features/home_page/presentation/pages/home_page.dart';
+import 'package:dwell_fi_assignment/init_dependencies.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Container(
-          margin: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _header(context),
-              _inputField(context),
-              _forgotPassword(context),
-              _signup(context),
-            ],
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthAuthenticated) {
+          log("Authenticated");
+          Navigator.of(context).pushAndRemoveUntil(
+              HomePage.route(), (route) => false,
+          );
+        } else if (state is AuthUnauthenticated) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+        }
+        else {
+          log(state.toString());
+        }
+      },
+      builder: (context, state) {
+        if (state is AuthLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return Scaffold(
+          body: Container(
+            margin: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _header(context),
+                _inputField(context),
+                _forgotPassword(context),
+                _signup(context),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -41,8 +69,9 @@ class LoginPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         TextField(
+          controller: serviceLocator<AuthBloc>().emailController,
           decoration: InputDecoration(
-              hintText: "Username",
+              hintText: "Email",
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(18),
                   borderSide: BorderSide.none),
@@ -52,6 +81,7 @@ class LoginPage extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         TextField(
+          controller: serviceLocator<AuthBloc>().passwordController,
           decoration: InputDecoration(
             hintText: "Password",
             border: OutlineInputBorder(
@@ -65,7 +95,12 @@ class LoginPage extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            final email = serviceLocator<AuthBloc>().emailController.text;
+            final password = serviceLocator<AuthBloc>().passwordController.text;
+            serviceLocator<AuthBloc>().add(
+                LoginRequested(UserLogin(email: email, password: password)));
+          },
           style: ElevatedButton.styleFrom(
             shape: const StadiumBorder(),
             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -94,7 +129,7 @@ class LoginPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Dont have an account? "),
+        const Text("Don't have an account? "),
         TextButton(
             onPressed: () {},
             child: const Text(
