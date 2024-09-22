@@ -1,7 +1,7 @@
 import asyncio
 from starlette.websockets import WebSocket
 
-from .redis_pub_sub_connection import RedisPubSubManager
+from notification.redis_pub_sub_connection import RedisPubSubManager
 
 
 class EventSubscription:

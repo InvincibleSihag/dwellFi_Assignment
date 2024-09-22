@@ -1,7 +1,5 @@
-import redis
-
-from .schemas import Event
-from .redis_pub_sub_connection import RedisPubSubManager
+from notification.schemas import Event
+from notification.redis_pub_sub_connection import RedisPubSubManager
 
 
 class EventPublisher:

@@ -1,8 +1,9 @@
 from sqlalchemy.sql import func
-from sqlalchemy import Column, DateTime, String, ForeignKey, Boolean, Integer
+from sqlalchemy import JSON, Column, DateTime, String, ForeignKey, Boolean, Integer
 from sqlalchemy.orm import declarative_mixin, declared_attr
 
-from database import Base
+from .database import Base
+
 
 
 @declarative_mixin
@@ -37,4 +38,21 @@ class User(BaseMixin, Base):
     username = Column(String(50), nullable=False, unique=True)
     email = Column(String(50), nullable=False, unique=True)
     password = Column(String(255), nullable=False)
+
+
+class File(BaseMixinWithCreatedBy, Base):
+    __tablename__ = "files"
+    id = Column(Integer, primary_key=True, index=True)
+    filename = Column(String, index=True)
+    size = Column(Integer)
+    type = Column(String)
+    is_processed = Column(Boolean, default=False)
+    meta_data = Column(JSON, nullable=True)
+
+
+class FileAnomalies(BaseMixinWithCreatedBy, Base):
+    __tablename__ = "file_anomalies"
+    id = Column(Integer, primary_key=True, index=True)
+    file_id = Column(Integer, ForeignKey('files.id'))
+    data = Column(String)
 

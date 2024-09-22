@@ -1,30 +1,32 @@
 import datetime
 import json
 
-import aioredis
+import redis.asyncio as redis
 from config import settings
-from .schemas import Event
+from notification.schemas import Event
 
 class RedisPubSubManager:
     redis_connection = None
 
     def __init__(self, host=settings.REDIS_HOST, port=settings.REDIS_PORT):
+        print(settings.REDIS_HOST)
+        print(settings.REDIS_PORT)
         self.redis_host = host
         self.redis_port = port
-        self.pubsub: aioredis.client.PubSub = None
+        self.pubsub: redis.client.PubSub = None
 
-    async def _get_redis_connection(self) -> aioredis.Redis:
+    async def _get_redis_connection(self) -> redis.Redis:
         """
         Establishes a connection to Redis.
 
         Returns:
-            aioredis.Redis: Redis connection object.
+            redis.Redis: Redis connection object.
         """
-        return aioredis.Redis(host=self.redis_host,
-                              port=self.redis_port,
-                              db=settings.REDIS_NOTIFY_DB,
-                              username=settings.REDIS_USERNAME,
-                              password=settings.REDIS_PASSWORD)
+        return redis.Redis(host=self.redis_host,
+                           port=self.redis_port,
+                           db=settings.REDIS_NOTIFY_DB,
+                           username=settings.REDIS_USERNAME,
+                           password=settings.REDIS_PASSWORD)
 
     async def connect(self) -> None:
         """
@@ -51,7 +53,7 @@ class RedisPubSubManager:
             channel (str): Channel or room ID to subscribe to.
 
         Returns:
-            aioredis.ChannelSubscribe: PubSub object for the subscribed channel.
+            redis.client.PubSub: PubSub object for the subscribed channel.
         """
         await self.pubsub.subscribe(channel)
 

@@ -2,7 +2,6 @@ import 'package:dwell_fi_assignment/features/home_page/presentation/bloc/home_bl
 import 'package:dwell_fi_assignment/features/home_page/presentation/bloc/home_event.dart';
 import 'package:dwell_fi_assignment/init_dependencies.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FileFilters extends StatelessWidget {
   const FileFilters({super.key});

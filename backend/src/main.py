@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from files_app.routes import files_router
+from notification.routes import events_routes
 from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -14,3 +15,4 @@ app.add_middleware(
 )
 
 app.include_router(files_router)
+app.include_router(events_routes)
