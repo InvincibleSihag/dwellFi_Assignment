@@ -2,8 +2,7 @@ from sqlalchemy.sql import func
 from sqlalchemy import JSON, Column, DateTime, String, ForeignKey, Boolean, Integer
 from sqlalchemy.orm import declarative_mixin, declared_attr
 
-from .database import Base
-
+from database import Base
 
 
 @declarative_mixin
@@ -42,10 +41,11 @@ class User(BaseMixin, Base):
 
 class File(BaseMixinWithCreatedBy, Base):
     __tablename__ = "files"
-    id = Column(Integer, primary_key=True, index=True)
+    # id = Column(Integer, primary_key=True, index=True)
     filename = Column(String, index=True)
     size = Column(Integer)
     type = Column(String)
+    task_status = Column(String, nullable=False)
     is_processed = Column(Boolean, default=False)
     meta_data = Column(JSON, nullable=True)
 

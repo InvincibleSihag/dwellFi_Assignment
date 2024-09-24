@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from files_app.routes import files_router
+from middlewares.user_auth_middleware import UserAuthentication
 from notification.routes import events_routes
 from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-origins = ["http://localhost:3000"]
+origins = ["http://localhost:3000", "http://localhost:50029"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -13,6 +14,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+app.add_middleware(UserAuthentication)
 app.include_router(files_router)
 app.include_router(events_routes)

@@ -9,16 +9,19 @@ class Event(BaseModel):
     is_major: bool = False
 
 class FileProcessed(Event):
-    status_code: int = 200
+    event_name: str = "File processed"
+    file_id: int
     status_message: str = "File processed successfully"
     file: File
     
 class FileProcessError(Event):
-    status_code: int = 400
+    event_name: str = "Anomalies detected"
+    file_id: int
     status_message: str = "File processing failed"
     file_anomaly: FileAnomaliesBase
 
 class Notification(Event):
+    event_name: str = "Notification"
     user_id: str
     title: str
     description: str

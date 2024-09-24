@@ -1,4 +1,4 @@
-import 'package:dwell_fi_assignment/features/home_page/domain/entities/file.dart';
+import 'package:dwell_fi_assignment/core/common/models/file_models.dart';
 import 'package:equatable/equatable.dart';
 abstract class HomeState extends Equatable {
   const HomeState();

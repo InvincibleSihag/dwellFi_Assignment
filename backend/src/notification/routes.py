@@ -18,7 +18,7 @@ eventPubs: EventPublisher = EventPublisher()
 @events_routes.websocket("/events")
 async def websocket_endpoint(websocket: WebSocket,
                              user_id: str):
-
+    print("Socket connected")
     await eventSubs.subscribe_socket_to_channel(websocket, user_id)
     try:
         while True:

@@ -1,12 +1,33 @@
+from typing import List
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from .. import models, schemas
 
-def create_file(db: Session, file: schemas.FileCreate):
-    db_file = models.File(**file.dict())
+from files_app.schemas import File, FileCreate
+from models import File as FileModel
+
+def create_file(db: Session, file_create: FileCreate, user_id: str) -> File:
+    db_file = FileModel(
+        filename=file_create.filename,
+        size=file_create.size,
+        type=file_create.type,
+        is_processed=False,
+        meta_data=None,
+        task_status="processing"
+    )
+    db_file.created_by_id = user_id
+    db_file.updated_by_id = user_id
     db.add(db_file)
     db.commit()
     db.refresh(db_file)
-    return db_file
+    return File(**db_file.__dict__)
 
-def get_files(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(models.File).offset(skip).limit(limit).all()
+def get_files(db: Session, user_id: str) -> List[File]:
+    db_files: List[FileModel] = db.query(FileModel).filter(FileModel.created_by_id == user_id).all()
+    files_schemas = [File(**db_file.__dict__) for db_file in db_files]
+    return files_schemas
+
+def get_file(db: Session, user_id: str, file_id: int) -> File:
+    db_file = db.query(FileModel).filter(FileModel.created_by_id == user_id, FileModel.id == file_id).first()
+    if db_file is None:
+        raise HTTPException(status_code=404, detail="File not found")
+    return File(**db_file.__dict__)

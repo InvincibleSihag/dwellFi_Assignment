@@ -5,4 +5,5 @@ import 'package:fpdart/fpdart.dart';
 
 abstract class AuthRepository {
   Future<Either<Failure, User>> login(UserLogin userLogin);
+  Future<String> getUserId();
 }

@@ -47,6 +47,9 @@ class EventSubscription:
         self.listening_task.add_done_callback(self.re_establish_listening)
 
     async def subscribe_socket_to_channel(self, socket: WebSocket, channel: str):
+        if channel is None:
+            print("Channel is None")
+            return
         await socket.accept()
         if channel in self.user_sockets:
             self.user_sockets[channel].append(socket)

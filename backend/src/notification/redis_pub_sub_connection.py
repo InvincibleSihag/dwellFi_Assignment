@@ -25,8 +25,9 @@ class RedisPubSubManager:
         return redis.Redis(host=self.redis_host,
                            port=self.redis_port,
                            db=settings.REDIS_NOTIFY_DB,
-                           username=settings.REDIS_USERNAME,
-                           password=settings.REDIS_PASSWORD)
+                        #    username=settings.REDIS_USERNAME,
+                        #    password=settings.REDIS_PASSWORD
+        )
 
     async def connect(self) -> None:
         """
@@ -43,7 +44,7 @@ class RedisPubSubManager:
             channel (str): Channel or room ID.
             event (str): Message to be published.
         """
-        await self.redis_connection.publish(channel, json.dumps(event.dict(), default=self.json_serial).encode('utf-8'))
+        await self.redis_connection.publish(channel, json.dumps(event.model_dump(), default=self.json_serial).encode('utf-8'))
 
     async def subscribe(self, channel: str):
         """

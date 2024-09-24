@@ -1,2 +1,3 @@
 const appName = 'Dwell Fi';
-const backendUrl = 'https://localhost:8000';
+const backendUrl = 'http://localhost:8000/';
+const socketUrl = 'http://localhost:8000/notification/events';

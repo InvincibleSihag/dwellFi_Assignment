@@ -8,9 +8,14 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Either<Failure, User>> login(UserLogin userLogin) async {
     return right(User(
-        id: "id",
+        id: "qwertyuiop",
         email: userLogin.email,
         password: userLogin.password,
     ));
+  }
+  
+  @override
+  Future<String> getUserId() async {
+    return "id";
   }
 }

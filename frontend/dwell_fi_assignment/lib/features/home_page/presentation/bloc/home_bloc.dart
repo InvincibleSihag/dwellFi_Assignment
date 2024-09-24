@@ -1,3 +1,4 @@
+import 'package:dwell_fi_assignment/core/common/models/file_models.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dwell_fi_assignment/features/home_page/domain/repository/home_page_repository.dart';
 import 'package:dwell_fi_assignment/features/home_page/presentation/bloc/home_event.dart';
@@ -5,10 +6,13 @@ import 'package:dwell_fi_assignment/features/home_page/presentation/bloc/home_st
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final HomePageRepository homePageRepository;
+  // List<File> files = [];
+  Map<DateTime, int> filesPerDay = {};
 
   HomeBloc(this.homePageRepository) : super(HomeInitial()) {
     on<LoadFilesEvent>(_onLoadFiles);
     on<FilterFilesEvent>(_onFilterFiles);
+    on<UploadFileEvent>(_onUploadFile);
   }
 
   void _onLoadFiles(LoadFilesEvent event, Emitter<HomeState> emit) async {
@@ -22,5 +26,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   void _onFilterFiles(FilterFilesEvent event, Emitter<HomeState> emit) {
     // Implement filtering logic
+  }
+  void _onUploadFile(UploadFileEvent event, Emitter<HomeState> emit) async {
+    emit(HomeLoading());
+    final result = await homePageRepository.uploadFile(event.file);
+    result.fold(
+      (failure) => emit(HomeError(failure.message)),
+      (file) => add(LoadFilesEvent()),
+    );
   }
 }

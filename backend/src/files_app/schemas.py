@@ -4,10 +4,12 @@ from typing import Optional
 
 class FileBase(BaseModel):
     filename: str
-    size: int
+    size: Optional[int] = None
     type: str
     is_processed: Optional[bool] = False
     meta_data: Optional[dict] = None
+    task_id: Optional[str] = None
+    task_status: Optional[str] = None
 
 class FileCreate(FileBase):
     pass
