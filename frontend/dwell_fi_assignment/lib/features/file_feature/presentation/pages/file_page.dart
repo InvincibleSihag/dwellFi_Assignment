@@ -4,6 +4,7 @@ import 'package:dwell_fi_assignment/core/notification/notification_service.dart'
 import 'package:dwell_fi_assignment/features/file_feature/data/file_event_repository_impl.dart';
 import 'package:dwell_fi_assignment/features/file_feature/domain/entities.dart';
 import 'package:dwell_fi_assignment/features/file_feature/domain/file_event_repository.dart';
+import 'package:dwell_fi_assignment/features/file_feature/presentation/pages/widgets/pie_chart.dart';
 import 'package:dwell_fi_assignment/init_dependencies.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -64,8 +65,7 @@ class _FilePageState extends State<FilePage> {
                 .showNotification(r.eventName, r.statusMessage);
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text(r.fileAnomaly.data.toString())),
+              SnackBar(content: Text(r.fileAnomaly.data.toString())),
             );
           }
         }
@@ -97,57 +97,74 @@ class _FilePageState extends State<FilePage> {
             return const Center(child: CircularProgressIndicator());
           } else if (state is FileLoaded) {
             final file = state.file;
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  // Display other file details here
-                  Expanded(
-                    child: MetricsChart(
-                        metrics: file.metaData?['metrics']
-                                .cast<Map<String, dynamic>>() ??
-                            []),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildLegendItem(Colors.blue, 'CPU Usage'),
-                      const SizedBox(width: 8),
-                      _buildLegendItem(Colors.red, 'Memory Usage'),
-                      const SizedBox(width: 8),
-                      _buildLegendItem(Colors.green, 'Disk Read'),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'File Status: ${file.taskStatus}, Size: ${file.size}',
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 500,
+                      child: MetricsChart(
+                          metrics: file.metaData?['metrics']
+                                  .cast<Map<String, dynamic>>() ??
+                              []),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                        onPressed: () {
-                          if (!file.isProcessed!) {
-                            return;
+                    const SizedBox(height: 24),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 32.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildLegendItem(Colors.blue, 'CPU Usage'),
+                                const SizedBox(height: 12),
+                                _buildLegendItem(Colors.red, 'Memory Usage'),
+                                const SizedBox(height: 12),
+                                _buildLegendItem(Colors.green, 'Disk Read'),
+                                const SizedBox(height: 24),
+                                Text(
+                                  'File Status: ${file.taskStatus}, Size: ${file.size}',
+                                  style: const TextStyle(
+                                      fontSize: 16, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 32.0),
+                            child: SizedBox(
+                              height: 200,
+                              child: PieChartWidget(metrics: file.metaData?['metrics'][0]),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (!file.isProcessed!) {
+                          return;
+                        }
+                        _pickFile().then((pickedFile) {
+                          if (pickedFile != null) {
+                            context
+                                .read<FileBloc>()
+                                .add(UpdateFile(file, pickedFile));
                           }
-                          _pickFile().then((pickedFile) {
-                            if (pickedFile != null) {
-                              context
-                                  .read<FileBloc>()
-                                  .add(UpdateFile(file, pickedFile));
-                            }
-                          });
-                        },
-                        child: (file.isProcessed!)
-                            ? const Text('Update File')
-                            : const CupertinoActivityIndicator()),
-                  )
-                ],
+                        });
+                      },
+                      child: (file.isProcessed!)
+                          ? const Text('Update File')
+                          : const CupertinoActivityIndicator(),
+                    )
+                  ],
+                ),
               ),
             );
           } else if (state is FileError) {

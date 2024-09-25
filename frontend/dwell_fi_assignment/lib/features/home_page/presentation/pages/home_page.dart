@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:dwell_fi_assignment/features/home_page/presentation/bloc/home_bloc.dart';
 import 'package:dwell_fi_assignment/features/home_page/presentation/bloc/home_event.dart';
-import 'package:dwell_fi_assignment/features/home_page/presentation/bloc/home_state.dart';
 import 'package:dwell_fi_assignment/features/home_page/presentation/pages/widgets/file_chart.dart';
 import 'package:dwell_fi_assignment/features/home_page/presentation/pages/widgets/file_filters.dart';
 import 'package:dwell_fi_assignment/features/home_page/presentation/pages/widgets/file_list.dart';
@@ -53,23 +52,27 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: const Text('Home Page'),
-      ),
-      body: const Column(
-        children: [
-          Expanded(child: FileChart()),
-          FileFilters(),
-          Expanded(child: FileList()),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _pickFile(context),
-        child: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
-          return const Icon(Icons.upload_file);
-        }),
+    return BlocProvider(
+      create: (context) => serviceLocator<HomeBloc>()..add(LoadFilesEvent()),
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: const Text('Home Page'),
+        ),
+        body: const Column(
+          children: [
+            Expanded(child: FileChart()),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: FileFilters(),
+            ),
+            Expanded(child: FileList()),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _pickFile(context),
+          child: const Icon(Icons.upload_file),
+        ),
       ),
     );
   }

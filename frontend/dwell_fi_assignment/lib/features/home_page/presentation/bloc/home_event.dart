@@ -11,10 +11,11 @@ class LoadFilesEvent extends HomeEvent {}
 
 class FilterFilesEvent extends HomeEvent {
   final String? fileType;
-  final DateTime? date;
-  final String? sensorType;
 
-  const FilterFilesEvent({required this.fileType, required this.date, required this.sensorType});
+  const FilterFilesEvent({this.fileType});
+
+  @override
+  List<Object> get props => [fileType??''];
 }
 
 class UploadFileEvent extends HomeEvent {

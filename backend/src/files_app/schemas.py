@@ -12,7 +12,7 @@ class FileBase(BaseModel):
     task_status: Optional[str] = None
 
 class FileCreate(FileBase):
-    id: int
+    pass
 
 class FileUpdate(FileBase):
     pass

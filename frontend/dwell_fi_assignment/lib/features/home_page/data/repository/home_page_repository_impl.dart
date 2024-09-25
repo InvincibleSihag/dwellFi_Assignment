@@ -10,7 +10,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fpdart/fpdart.dart';
 
 class HomePageRepositoryImpl extends HomePageRepository {
-
   Map<DateTime, int> filesPerDay = {};
 
   @override
@@ -25,13 +24,15 @@ class HomePageRepositoryImpl extends HomePageRepository {
           File file = File.fromJson(file_data);
           files.add(file);
           DateTime uploadDate = DateTime.parse(file.createdAt.toString());
-          DateTime dateOnly = DateTime(uploadDate.year, uploadDate.month, uploadDate.day);
+          DateTime dateOnly =
+              DateTime(uploadDate.year, uploadDate.month, uploadDate.day);
           if (filesPerDay.containsKey(dateOnly)) {
             filesPerDay[dateOnly] = filesPerDay[dateOnly]! + 1;
           } else {
             filesPerDay[dateOnly] = 1;
           }
         }
+        files.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         return right({'files': files, 'filesPerDay': filesPerDay});
       } else {
         return left(Failure('Failed to get files'));
@@ -50,15 +51,16 @@ class HomePageRepositoryImpl extends HomePageRepository {
       var data = FormData.fromMap({
         'file': [
           MultipartFile.fromBytes(platformFile.bytes!,
-              filename: platformFile.name, contentType: DioMediaType.parse("application/json"))
+              filename: platformFile.name,
+              contentType: DioMediaType.parse("application/json"))
         ],
         'file_data_create_form':
-            '{\n"filename": "${platformFile.name}",\n"type": "server_sensor"\n}'
+            '{\n"filename": "${platformFile.name}",\n"type": "server_metadata"\n}'
       });
 
       var dio = Dio();
       var response = await dio.request(
-        'http://127.0.0.1:8000/files/uploadfile/',
+        '${backendUrl}files/uploadfile/',
         options: Options(
           method: 'POST',
         ),

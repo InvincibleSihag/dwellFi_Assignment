@@ -1,27 +1,27 @@
 {
-    "server_id": "server_001",
-    "server_name": "web-server-01",
-    "location": "data-center-1",
+    "server_id": "server_002",
+    "server_name": "web-server-03",
+    "location": "data-center-4",
     "metrics": [
       {
         "timestamp": "2024-09-19T10:00:00Z",
-        "cpu_usage": 900,
-        "memory_usage": 750,
-        "disk_read": 550,
-        "disk_write": 500,
-        "network_in": 600,
-        "network_out": 400,
-        "response_time": 620
+        "cpu_usage": 187,
+        "memory_usage": 245,
+        "disk_read": 112,
+        "disk_write": 78,
+        "network_in": 203,
+        "network_out": 156,
+        "response_time": 89
       },
       {
         "timestamp": "2024-09-19T10:01:00Z",
-        "cpu_usage": 700,
-        "memory_usage": 720,
-        "disk_read": 560,
-        "disk_write": 300,
-        "network_in": 220,
-        "network_out": 410,
-        "response_time": 230
+        "cpu_usage": 276,
+        "memory_usage": 132,
+        "disk_read": 45,
+        "disk_write": 189,
+        "network_in": 67,
+        "network_out": 298,
+        "response_time": 23
       },
       {
         "timestamp": "2024-09-19T10:02:00Z",
@@ -82,6 +82,16 @@
         "network_in": 680,
         "network_out": 470,
         "response_time": 255
+    },
+    {
+        "timestamp": "2024-09-19T10:08:00Z",
+        "cpu_usage": 92,
+        "memory_usage": 215,
+        "disk_read": 178,
+        "disk_write": 56,
+        "network_in": 289,
+        "network_out": 134,
+        "response_time": 201
     }
    ]
   }

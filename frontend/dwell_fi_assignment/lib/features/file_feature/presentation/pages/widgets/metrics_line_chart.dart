@@ -50,18 +50,39 @@ class MetricsChart extends StatelessWidget {
               isCurved: true,
               color: Colors.green,
               barWidth: 2,
-              belowBarData: BarAreaData(show: true, color: Colors.green.shade50),
+              belowBarData:
+                  BarAreaData(show: true, color: Colors.green.shade50),
             ),
           ],
           titlesData: FlTitlesData(
-            leftTitles: const AxisTitles(
-                sideTitles: SideTitles(showTitles: true, reservedSize: 40)),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 40,
+                interval: 100,
+                getTitlesWidget: (value, meta) {
+                  return Text(
+                    value.toStringAsFixed(2), // Format the value to one decimal place
+                    style: const TextStyle(
+                      fontSize: 10,
+                    ),
+                  );
+                },
+              ),
+            ),
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
+                interval:
+                    36000,
                 getTitlesWidget: (value, meta) {
-                  final date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
-                  return Text('${date.hour}:${date.minute}');
+                  final date =
+                      DateTime.fromMillisecondsSinceEpoch(value.toInt());
+                  return Text(
+                    '${date.hour}:${date.minute.toString().padLeft(2, '0')}', // Format minutes with leading zero
+                    style: const TextStyle(
+                        fontSize: 10),
+                  );
                 },
               ),
             ),
