@@ -6,7 +6,7 @@ class File extends FileBase {
   final DateTime updatedAt;
   final String? createdById;
   final String? updatedById;
-
+  final String? taskStatus;
   const File({
     required super.filename,
     required super.size,
@@ -18,6 +18,7 @@ class File extends FileBase {
     required this.updatedAt,
     this.createdById,
     this.updatedById,
+    this.taskStatus,
   });
 
   @override

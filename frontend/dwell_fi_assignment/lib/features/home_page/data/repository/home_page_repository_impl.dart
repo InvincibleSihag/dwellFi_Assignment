@@ -20,6 +20,7 @@ class HomePageRepositoryImpl extends HomePageRepository {
       if (response.statusCode == 200) {
         final fileData = response.data;
         List<File> files = [];
+        filesPerDay = {};
         for (var file_data in fileData) {
           File file = File.fromJson(file_data);
           files.add(file);
@@ -78,9 +79,11 @@ class HomePageRepositoryImpl extends HomePageRepository {
           size: fileData['size'],
           type: fileData['type'],
           id: fileData['id'],
-          createdAt: DateTime.parse(fileData['createdAt']),
-          updatedAt: DateTime.parse(fileData['updatedAt']),
-          metaData: fileData['metaData'],
+          isProcessed: fileData['is_rocessed'],
+          taskStatus: fileData['task_status'],
+          createdAt: DateTime.parse(fileData['created_at']),
+          updatedAt: DateTime.parse(fileData['updated_at']),
+          metaData: fileData['meta_data'],
         );
         return right(file);
       } else {

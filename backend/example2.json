@@ -73,7 +73,7 @@
         "network_out": 360,
         "response_time": 150
     },
-    {
+    
         "timestamp": "2024-09-19T10:07:00Z",
         "cpu_usage": 260,
         "memory_usage": 70,

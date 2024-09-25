@@ -5,7 +5,7 @@ import json
 import redis
 from files_app.schemas import File
 from models import File as FileModel
-from notification.schemas import FileProcessed, FileProcessError, FileAnomaliesBase
+from notification.schemas import FileProcessed, FileProcessError, FileAnomaliesBase, Notification
 from database import SessionLocal
 from config import settings
 
@@ -41,7 +41,7 @@ def process_json_file(file_id: int, user_id: str, json_file: bytes):
         db.refresh(file)
         try:
             json_data = json.loads(json_file)
-            time.sleep(10)
+            time.sleep(2)
             file.meta_data = json_data
             file.is_processed = True
             file.task_status = "processed"
@@ -59,6 +59,7 @@ def process_json_file(file_id: int, user_id: str, json_file: bytes):
             file=File(**file.__dict__)
         )
         redis_client.publish(user_id, event.model_dump_json())
+        redis_client.publish(user_id, Notification(event_name="Notification", is_major=True, title="File processed successfully", description="File processed successfully", user_id=user_id).model_dump_json())
         process_json_file_values.delay(file_id, user_id, json_data)
     except Exception as e:
         print(e)
@@ -72,6 +73,8 @@ def process_json_file(file_id: int, user_id: str, json_file: bytes):
             file_anomaly=FileAnomaliesBase(file_id=file_id, data=str(e))
         )
         redis_client.publish(user_id, event.model_dump_json())
+        redis_client.publish(user_id, Notification(event_name="Notification", is_major=True, title="File processing failed", description="File processing failed", user_id=user_id).model_dump_json())
+
     finally:
         db.close()
 

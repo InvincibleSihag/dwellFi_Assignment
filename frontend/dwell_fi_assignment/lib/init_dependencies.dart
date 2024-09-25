@@ -9,7 +9,6 @@ import 'package:dwell_fi_assignment/features/auth/domain/auth_repository.dart';
 import 'package:dwell_fi_assignment/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:dwell_fi_assignment/features/file_feature/data/file_repository_impl.dart';
 import 'package:dwell_fi_assignment/features/file_feature/domain/file_repository.dart';
-import 'package:dwell_fi_assignment/features/file_feature/presentation/bloc/file_bloc.dart';
 import 'package:dwell_fi_assignment/features/home_page/data/repository/home_page_repository_impl.dart';
 import 'package:dwell_fi_assignment/features/home_page/domain/repository/home_page_repository.dart';
 import 'package:dwell_fi_assignment/features/home_page/presentation/bloc/home_bloc.dart';

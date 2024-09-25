@@ -8,11 +8,16 @@ import 'package:dwell_fi_assignment/features/home_page/presentation/pages/widget
 import 'package:dwell_fi_assignment/features/home_page/presentation/pages/widgets/file_list.dart';
 import 'package:dwell_fi_assignment/init_dependencies.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomePage extends StatelessWidget {
+import '../../../../core/notification/notification_service.dart';
+import '../../../../core/socket/socket_service.dart';
+import '../../../file_feature/domain/entities.dart' as file_entities;
+
+class HomePage extends StatefulWidget {
   static route() => CupertinoPageRoute(
         builder: (context) => const HomePage(),
       );
@@ -20,8 +25,30 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    serviceLocator<SocketService>().getStream("Notification").listen((onData) {
+      log('Notification: $onData');
+      file_entities.Notification notification = file_entities.Notification.fromJson(onData);
+      if (!kIsWeb) {
+        serviceLocator<LocalNotificationService>().showNotification(notification.title, notification.description);
+      } else {
+        serviceLocator<LocalNotificationService>().showCustomNotification(_scaffoldKey.currentContext!, notification.title, notification.description);
+      }
+    });
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: const Text('Home Page'),
       ),

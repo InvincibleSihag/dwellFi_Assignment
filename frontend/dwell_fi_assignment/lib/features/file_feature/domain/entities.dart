@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dwell_fi_assignment/core/common/models/file_models.dart';
 import 'package:equatable/equatable.dart';
 
@@ -62,12 +64,14 @@ class Notification extends Event {
   List<Object> get props => super.props..addAll([userId, title, description]);
 
   factory Notification.fromJson(Map<String, dynamic> json) {
+    log(json.runtimeType.toString());
+    log(json.toString());
     return Notification(
-      userId: json["user_id"],
-      title: json["title"],
-      description: json["description"],
-      isMajor: json["isMajor"],
-      eventName: json["eventName"],
+      userId: json["user_id"] as String,
+      title: json["title"] as String,
+      description: json["description"] as String,
+      isMajor: json["is_major"] as bool,
+      eventName: json["event_name"] as String,
     );
   }
 }

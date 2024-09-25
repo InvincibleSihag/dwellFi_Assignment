@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
@@ -19,8 +20,12 @@ class SocketServiceImpl extends SocketService {
     channel = WebSocketChannel.connect(Uri.parse(url));
 
     channel.stream.listen((data) {
-      log(data);
-      controller.add(data);
+      try {
+        final parsedData = jsonDecode(data);
+        controller.add(parsedData);
+      } catch (e) {
+        print('Error parsing data: $e');
+      }
     }, onError: (error) {
       print('socket error: $error');
     }, onDone: () {
@@ -48,6 +53,7 @@ class SocketServiceImpl extends SocketService {
 
   @override
   Stream<dynamic> getStreamWithFileId(int fileId) {
+    log('getStreamWithFileId: $fileId');
     return controller.stream.where((event) => event["file_id"] == fileId);
   }
 }
