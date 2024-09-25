@@ -13,10 +13,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatelessWidget {
-  static route() =>
-    CupertinoPageRoute(
-      builder: (context) => const HomePage(),
-    );
+  static route() => CupertinoPageRoute(
+        builder: (context) => const HomePage(),
+      );
 
   const HomePage({super.key});
 
@@ -28,19 +27,16 @@ class HomePage extends StatelessWidget {
       ),
       body: const Column(
         children: [
-          FileChart(),
+          Expanded(child: FileChart()),
           FileFilters(),
           Expanded(child: FileList()),
         ],
       ),
-      
       floatingActionButton: FloatingActionButton(
         onPressed: () => _pickFile(context),
-        child: BlocBuilder<HomeBloc, HomeState>(
-          builder: (context, state) {
-            return const Icon(Icons.upload_file);
-          }
-        ),
+        child: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+          return const Icon(Icons.upload_file);
+        }),
       ),
     );
   }

@@ -4,6 +4,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fpdart/fpdart.dart';
 
 abstract class HomePageRepository {
-  Future<Either<Failure, List<File>>> getFiles();
+  Future<Either<Failure, dynamic>> getFiles();
   Future<Either<Failure, File>> uploadFile(PlatformFile platformFile);
 }

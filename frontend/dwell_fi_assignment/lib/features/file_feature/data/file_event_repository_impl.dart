@@ -18,10 +18,12 @@ class FileEventRepositoryImpl extends FileEventRepository {
   @override
   Stream<Either<Failure, Event>> getEvents() {
     _socketService.getStreamWithFileId(fileId).listen((data) {
+      log('Received data: $data'); // Add this line to log the received data
       try {
         final event = _parseEvent(data);
         controller.add(Right(event));
       } catch (e) {
+        log('Error parsing event: $e'); // Add this line to log the error
         controller.add(Left(Failure(e.toString())));
       }
     });
@@ -30,6 +32,12 @@ class FileEventRepositoryImpl extends FileEventRepository {
 
   Event _parseEvent(dynamic data) {
     log('Parsing event: $data');
+    if (data is! Map<String, dynamic>) {
+      throw Exception('Data is not a valid map');
+    }
+    if (data['event_name'] is! String) {
+      throw Exception('event_name is not a String');
+    }
     switch (data['event_name']) {
       case 'FileProcessed':
         return FileProcessed(

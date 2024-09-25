@@ -27,7 +27,7 @@ class EventSubscription:
             try:
                 while True:
                     message = await self.pubsub_client.pubsub.get_message(ignore_subscribe_messages=True)
-                    if message is not None:
+                    if message is not None and message['channel'] is not None:
                         channel_id = message['channel'].decode('utf-8')
                         all_sockets = self.user_sockets[channel_id]
                         for socket in all_sockets:
@@ -47,7 +47,7 @@ class EventSubscription:
         self.listening_task.add_done_callback(self.re_establish_listening)
 
     async def subscribe_socket_to_channel(self, socket: WebSocket, channel: str):
-        if channel is None:
+        if not channel or channel == "":
             print("Channel is None")
             return
         await socket.accept()
@@ -80,7 +80,8 @@ class EventSubscription:
         if channel is None:
             print("Subscribing all channels again")
             print(self.user_sockets.keys())
-            await self.pubsub_client.subscribe(*self.user_sockets.keys())
+            if len(self.user_sockets.keys()) > 0:
+                await self.pubsub_client.subscribe(*self.user_sockets.keys())
         else:
             await self.pubsub_client.subscribe(channel)
 

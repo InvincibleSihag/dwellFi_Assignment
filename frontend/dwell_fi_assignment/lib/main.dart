@@ -7,6 +7,7 @@ import 'package:dwell_fi_assignment/features/auth/presentation/pages/login_page.
 import 'package:dwell_fi_assignment/features/file_feature/presentation/bloc/file_bloc.dart';
 import 'package:dwell_fi_assignment/features/home_page/presentation/bloc/home_bloc.dart';
 import 'package:dwell_fi_assignment/features/file_feature/domain/entities.dart' as file_entities;
+import 'package:dwell_fi_assignment/features/home_page/presentation/pages/home_page.dart';
 import 'package:dwell_fi_assignment/init_dependencies.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,7 +58,7 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
-        home: const LoginPage(),
+        home: const HomePage(),
       ),
     );
   }
