@@ -79,7 +79,7 @@ class HomePageRepositoryImpl extends HomePageRepository {
           size: fileData['size'],
           type: fileData['type'],
           id: fileData['id'],
-          isProcessed: fileData['is_rocessed'],
+          isProcessed: fileData['is_processed'],
           taskStatus: fileData['task_status'],
           createdAt: DateTime.parse(fileData['created_at']),
           updatedAt: DateTime.parse(fileData['updated_at']),

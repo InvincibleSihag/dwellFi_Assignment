@@ -39,11 +39,34 @@ class File extends FileBase {
       updatedById: json['updated_by_id'],
     );
   }
+
+  copyWith({
+    String? filename,
+    int? size,
+    String? type,
+    bool? isProcessed,
+    String? taskStatus,
+    Map<String, dynamic>? metaData,
+  }) {
+    return File(
+      filename: filename ?? this.filename,
+      size: size ?? this.size,
+      type: type ?? this.type,
+      isProcessed: isProcessed ?? this.isProcessed,
+      metaData: metaData ?? this.metaData,
+      id: id,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      createdById: createdById ?? this.createdById,
+      updatedById: updatedById ?? this.updatedById,
+      taskStatus: taskStatus ?? this.taskStatus,
+    );
+  }
 }
 
 class FileBase extends Equatable {
   final String filename;
-  final int size;
+  final int? size;
   final String type;
   final bool? isProcessed;
   final Map<String, dynamic>? metaData;

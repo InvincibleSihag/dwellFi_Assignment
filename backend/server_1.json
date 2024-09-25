@@ -47,7 +47,7 @@
         "timestamp": "2024-09-19T10:04:00Z",
         "cpu_usage": 630,
         "memory_usage": 257,
-        "disk_read": 870,
+        "disk_read": 370,
         "disk_write": 525,
         "network_in": 650,
         "network_out": 440,
@@ -75,7 +75,7 @@
     },
     {
         "timestamp": "2024-09-19T10:07:00Z",
-        "cpu_usage": 360,
+        "cpu_usage": 860,
         "memory_usage": 780,
         "disk_read": 485,
         "disk_write": 340,

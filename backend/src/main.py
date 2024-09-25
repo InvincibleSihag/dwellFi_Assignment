@@ -5,7 +5,7 @@ from notification.routes import events_routes
 from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-origins = ["http://localhost:3000", "http://localhost:53177"]
+origins = ["http://localhost:3000", "http://localhost:56040"]
 
 app.add_middleware(
     CORSMiddleware,

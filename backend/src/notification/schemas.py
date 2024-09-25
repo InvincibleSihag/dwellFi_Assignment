@@ -15,7 +15,7 @@ class FileProcessed(Event):
     file: File
     
 class FileProcessError(Event):
-    event_name: str = "Anomalies detected"
+    event_name: str = "FileProcessError"
     file_id: int
     status_message: str = "File processing failed"
     file_anomaly: FileAnomaliesBase

@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from database import get_db
 from files_app import schemas
 from tasks.celery_app import process_json_file
-from .service import get_files, create_file, get_file
+from .service import get_files, create_file, get_file, update_file
 
 files_router = APIRouter(prefix="/files", tags=['Files'])
 
@@ -32,3 +32,23 @@ def get_files_route(request: Request, db: Session = Depends(get_db)):
 @files_router.get("/files/{file_id}", response_model=schemas.File)
 def get_file_route(request: Request, file_id: int, db: Session = Depends(get_db)):
     return get_file(db=db, file_id=file_id, user_id=request.state.user_id)
+
+@files_router.put("/updatefile/{file_id}", response_model=schemas.File)
+async def update_file_route(request: Request, file_id: int, file_update_form: str = Form(), file: UploadFile = File(None), db: Session = Depends(get_db)):
+    file_update = schemas.FileUpdate.model_validate(json.loads(file_update_form))
+    if file is not None and file.content_type != "application/json":
+        raise HTTPException(status_code=400, detail="Invalid file type")
+    file_obj = get_file(db=db, file_id=file_id, user_id=request.state.user_id)
+    file_size = 0
+    if file_obj:
+        file_update.size = file_obj.size
+    if file is not None:
+        contents = await file.read()
+        file_size = len(contents)
+        file_update.size = file_size
+        if file_size > 10 * 1024 * 1024:
+            raise HTTPException(status_code=400, detail="File too large")
+    updated_file_schema: schemas.File = update_file(db=db, file_update=file_update, file_id=file_id, user_id=request.state.user_id)
+    if file is not None:
+        process_json_file.delay(file_id, request.state.user_id, contents)
+    return updated_file_schema

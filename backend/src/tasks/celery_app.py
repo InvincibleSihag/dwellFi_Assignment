@@ -41,7 +41,7 @@ def process_json_file(file_id: int, user_id: str, json_file: bytes):
         db.refresh(file)
         try:
             json_data = json.loads(json_file)
-            time.sleep(2)
+            time.sleep(4)
             file.meta_data = json_data
             file.is_processed = True
             file.task_status = "processed"
@@ -53,7 +53,7 @@ def process_json_file(file_id: int, user_id: str, json_file: bytes):
         print(file.filename)
         event = FileProcessed(
             file_id=file_id,
-            event_name="file_processed",
+            event_name="FileProcessed",
             is_major=True,
             status_message="File processed successfully",
             file=File(**file.__dict__)
@@ -69,7 +69,7 @@ def process_json_file(file_id: int, user_id: str, json_file: bytes):
         db.refresh(file)
         event = FileProcessError(
             file_id=file_id,
-            event_name="file_process_error",
+            event_name="FileProcessError",
             is_major=True,
             file_anomaly=FileAnomaliesBase(file_id=file_id, data=str(e))
         )
@@ -86,7 +86,7 @@ def process_json_file_values(file_id: int, user_id: str, json_file: dict):
     acceptable_ranges = {
         "cpu_usage": (0, 85),
         "memory_usage": (0, 90),
-        "disk_read": (0, 1000),
+        "disk_read": (0, 500),
         "disk_write": (0, 1000),
         "network_in": (0, 1000),
         "network_out": (0, 1000),
@@ -105,7 +105,7 @@ def process_json_file_values(file_id: int, user_id: str, json_file: dict):
         # Create a FileProcessError event
         event = FileProcessError(
             file_id=file_id,
-            event_name="Anomalies detected",
+            event_name="FileProcessError",
             is_major=True,
             file_anomaly=FileAnomaliesBase(file_id=file_id, data=", ".join(anomalies))
         )
