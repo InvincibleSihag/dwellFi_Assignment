@@ -1,3 +1,4 @@
+import 'package:dwell_fi_assignment/config/theme.dart';
 import 'package:dwell_fi_assignment/core/socket/socket_service.dart';
 import 'package:dwell_fi_assignment/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:dwell_fi_assignment/features/file_feature/presentation/bloc/file_bloc.dart';
@@ -40,11 +41,9 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => serviceLocator<FileBloc>()),
       ],
       child: MaterialApp(
+        theme: baseTheme,
         navigatorKey: navigatorKey, // Set the navigator key here
         title: 'Dwell FI Assignment',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        ),
         home: const HomePage(),
       ),
     );

@@ -30,6 +30,7 @@ class File extends FileBase {
       size: json['size'],
       type: json['type'],
       isProcessed: json['is_processed'],
+      taskStatus: json['task_status'],
       metaData: json['meta_data'],
       id: json['id'],
       createdAt: DateTime.parse(json['created_at']),

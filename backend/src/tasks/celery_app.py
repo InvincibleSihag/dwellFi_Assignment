@@ -63,7 +63,8 @@ def process_json_file(file_id: int, user_id: str, json_file: bytes):
         process_json_file_values.delay(file_id, user_id, json_data)
     except Exception as e:
         print(e)
-        file.status = str(e)
+        file.task_status = str(e)
+        file.is_processed = False
         db.commit()
         db.refresh(file)
         event = FileProcessError(
@@ -110,3 +111,5 @@ def process_json_file_values(file_id: int, user_id: str, json_file: dict):
         )
         redis_client.publish(user_id, event.model_dump_json())
 
+
+#  celery -A tasks.celery_app worker --loglevel=info

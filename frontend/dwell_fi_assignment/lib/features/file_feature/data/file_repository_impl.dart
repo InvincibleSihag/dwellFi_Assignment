@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:dwell_fi_assignment/core/common/models/file_models.dart';
+import 'package:dwell_fi_assignment/core/constants/constants.dart';
 import 'package:dwell_fi_assignment/core/error/failures.dart';
 import 'package:dwell_fi_assignment/features/file_feature/domain/file_repository.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:dio/dio.dart';
 
 class FileRepositoryImpl extends FileRepository {
   @override
@@ -11,52 +15,32 @@ class FileRepositoryImpl extends FileRepository {
 
   @override
   Future<Either<Failure, File>> getFileById(int id) async {
-    // Implement the logic to fetch a file by its ID
-    // For now, return a dummy file
-    return right(File(
-      filename: 'example.json',
-      size: 1234,
-      type: 'sensor',
-      id: id,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      metaData: const {
-              "server_id": "server_001",
-              "server_name": "web-server-01",
-              "location": "data-center-1",
-              "metrics": [
-                {
-                  "timestamp": "2024-09-19T10:00:00Z",
-                  "cpu_usage": 30,
-                  "memory_usage": 60,
-                  "disk_read": 150,
-                  "disk_write": 200,
-                  "network_in": 500,
-                  "network_out": 300,
-                  "response_time": 120
-                },
-                {
-                  "timestamp": "2024-09-19T10:20:00Z",
-                  "cpu_usage": 35,
-                  "memory_usage": 62,
-                  "disk_read": 160,
-                  "disk_write": 210,
-                  "network_in": 520,
-                  "network_out": 310,
-                  "response_time": 130
-                },
-                {
-                  "timestamp": "2024-09-19T10:45:00Z",
-                  "cpu_usage": 40,
-                  "memory_usage": 65,
-                  "disk_read": 155,
-                  "disk_write": 215,
-                  "network_in": 530,
-                  "network_out": 320,
-                  "response_time": 125
-                },
-            ]
-            }
-    ));
+    try {
+      final response = await Dio().get('${backendUrl}files/files/$id/');
+      if (response.statusCode == 200) {
+        final fileData = response.data;
+        // log('File data: $fileData');
+        // log('File data type: ${fileData.runtimeType}');
+        final file = File(
+          filename: fileData['filename'],
+          size: fileData['size'],
+          type: fileData['type'],
+          id: fileData['id'],
+          taskStatus: fileData['task_status'],
+          isProcessed: fileData['is_processed'],
+          createdAt: DateTime.parse(fileData['created_at']),
+          updatedAt: DateTime.parse(fileData['updated_at']),
+          metaData: fileData['meta_data'],
+        );
+        log('File: $file');
+        return right(file);
+      } else {
+        return left(Failure('Failed to get file by ID'));
+      }
+    } catch (e) {
+      log("Error getting file by ID");
+      log(e.toString());
+      return left(Failure(e.toString()));
+    }
   }
 }
